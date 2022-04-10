@@ -1,3 +1,9 @@
+# Completed - Can be used by all 
+# Latest Ami Id is fetched automatically from SSM Parameter (Windows Server 2022)
+#
+#
+#
+
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'AWS CloudFormation Sample Template creates an ec2 instance 
               with additional 100gb ebs volume

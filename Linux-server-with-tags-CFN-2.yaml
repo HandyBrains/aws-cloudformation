@@ -1,5 +1,11 @@
+# Completed - Can be used by all 
+# Please note Termination protection enabled- 
+# If you want to delete your stack, you need to disable termination protection
+#
+#
+#
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'AWS CloudFormation Template creates an Linux ec2 instance 
+Description: 'AWS CloudFormation Template creates an  ec2 instance 
               with additional 300gb ebs volume
               Latest Amazon public AMI SUSE 15 SP3 '
 Parameters:
@@ -24,6 +30,8 @@ Parameters:
     #Type:  'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Type: String
     Default: ami-02be7a0d5d4276ce2
+    Description: Please enter the latest AMI id you want to use for this aws region
+    ConstraintDescription: must be a valid ami id for this aws region.
   KeyName1:
     Description: Name of an existing EC2 KeyPair to enable access to the instance
     Type: AWS::EC2::KeyPair::KeyName
