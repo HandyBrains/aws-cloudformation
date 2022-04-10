@@ -1,0 +1,179 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "This YAML cloud formation template creates an ec2 instance
+              with mentioned AMI, 100 GB additional ebs volume in EU Ireland region,
+              Please check and edit the correct AMI id, aws region, instance type 
+              as per the EnvironmentType,
+              check the AMI  on Mappings block and edit as required
+              check the condition for every resource in resource block and edit as required
+              check the EnvironmentType on resource block and edit InstanceType as required"
+
+
+Mappings:
+  RegionMap:
+    eu-west-2:
+      AMI: "ami-a0cfeed8"
+    eu-west-1:
+      AMI: "ami-0782eaff65f13ad4e"
+
+
+Parameters:
+  Subnet1:
+    Type: String
+    Description: Subnet ID of instance1
+  
+  SecurityGroupCommon1:
+    Type: String
+    Description: SG ID of instance 1
+  
+  Name1:
+    Type: String
+    Description: Name of instance 1
+  Purpose1:
+    Type: String
+    Description: Purpose of instance 1
+  OperatingSystem1:
+    Type: String
+    Description: OS Type of instance 1
+  ServiceType1:
+    Type: String
+    Description: Service Type of instance 1
+  EnvironmentType1:
+    Type: String
+    Description: Environment Type of instance 1
+  EnvironmentID1:
+    Type: String
+    Description: EnvironmentID of instance 1
+  ApplicationOwner1:
+    Type: String
+    Description: Application Owner Type of instance 1
+  Hostname1:
+    Type: String
+    Description: Hostname of instance 1
+  Project1:
+    Type: String
+    Description: Project of instance 1
+  SID1:
+    Type: String
+    Description: SID of instance 1
+  Owner1:
+    Type: String
+    Description: Owner of instance 1
+  StartStopSchedule1:
+    Type: String
+    Description: StartStopSchedule of instance 1
+  OperatingHours1:
+    Type: String
+    Description: OperatingHours of instance 1
+  BAUStatus1:
+    Type: String
+    Description: BAUStatus of instance 1
+  DateOfCommission1:
+    Type: String
+    Description: DateOfCommission of instance 1
+  DateOfDeletion1:
+    Type: String
+    Description: DateOf Deletion of instance 1
+  ApplicationGroup1:
+    Type: String
+    Description: ApplicationGroup of instance 1
+  Application1: 
+    Type: String
+    Description: Application of instance 1
+
+  EnvironmentType:
+    Description: Environment type.
+    Default: Test
+    Type: String
+    AllowedValues: [Production, Development, Test, Staging]
+    ConstraintDescription: must specify Production, Development, Test, Staging.
+  
+Conditions:
+  
+  CreateDevResources: !Equals [!Ref EnvironmentType, "Development"]
+  CreateTestResources: !Equals [!Ref EnvironmentType, "Test"]
+  #CreateStagingResources: !Equals [!Ref EnvironmentType, "Staging"]
+  #CreateProdResources: !Equals [!Ref EnvironmentType, Production]
+
+  
+
+Resources:
+  EC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", AMI]
+      InstanceType: !If [CreateDevResources, t3.small, !If [CreateTestResources, t3.small, t3.micro]]    
+      #InstanceType: !If [CreateStagingResources, t3.small, !If [CreateProdResources, t3.large, t3.xlarge]]    
+      SubnetId: !Ref Subnet1
+      SecurityGroupIds: [!Ref SecurityGroupCommon1] 
+      BlockDeviceMappings:
+        -
+          DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 100
+      Tags:
+        - Key: Name
+          Value: !Ref Name1
+        - Key: Purpose
+          Value: !Ref Purpose1
+        - Key: EnvironmentType
+          Value: !Ref EnvironmentType1
+        - Key: Hostname
+          Value: !Ref Hostname1
+        - Key: Project
+          Value: !Ref Project1
+        - Key: Application
+          Value: !Ref Application1
+        - Key: ApplicationGroup
+          Value: !Ref ApplicationGroup1
+        - Key: Service-Type
+          Value: !Ref ServiceType1
+        - Key: OperatingSystem
+          Value: !Ref OperatingSystem1
+        - Key: OperatingHours
+          Value: !Ref OperatingHours1
+        - Key: StartStopSchedule
+          Value: !Ref StartStopSchedule1
+        - Key: BAUStatus
+          Value: !Ref BAUStatus1
+        - Key: ApplicationOwner
+          Value: !Ref ApplicationOwner1
+        - Key: EnvironmentID
+          Value: !Ref EnvironmentID1
+        - Key: DateOfCommission
+          Value: !Ref DateOfCommission1
+        - Key: DateOfDeletion
+          Value: !Ref DateOfDeletion1
+        - Key: SID
+          Value: !Ref SID1
+        - Key: Owner
+          Value: !Ref Owner1
+      
+  MountPoint:
+    Type: "AWS::EC2::VolumeAttachment"
+    Condition: CreateTestResources
+    Properties:
+      InstanceId: !Ref EC2Instance
+      VolumeId: !Ref AdditionalEBSVolume
+      Device: /dev/xvda
+  AdditionalEBSVolume:
+    Type: "AWS::EC2::Volume"
+    Condition: CreateTestResources
+    Properties:
+      Size: 100
+      VolumeType: gp3
+      AvailabilityZone: !GetAtt EC2Instance.AvailabilityZone
+      Tags:
+        - Key: Name
+          Value: !Ref Name1
+        - Key: Purpose
+          Value: !Ref Purpose1
+        - Key: EnvironmentType
+          Value: !Ref EnvironmentType1
+        - Key: Hostname
+          Value: !Ref Hostname1
+        - Key: Project
+          Value: !Ref Project1
+        - Key: Application
+          Value: !Ref Application1
+        - Key: ApplicationGroup
+          Value: !Ref ApplicationGroup1

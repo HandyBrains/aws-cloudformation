@@ -1,0 +1,243 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS CloudFormation Sample Template creates an rds instance '
+Parameters:
+  AllocatedStorage:
+    Type: Integer
+    Description: storage for RDS Instance
+  AllowMajorVersionUpgrade:
+    Type: String
+    Description: AllowMajorVersionUpgrade true or false
+  AssociatedRoles:
+    #Type: AWS::RDS::DBInstance DBInstanceRole
+    Type: String
+    Description: Enter the ARN of the IAM Role
+  AutoMinorVersionUpgrade:
+    Type: String
+    Description: AutoMinorVersionUpgrade true or false
+  AvailabilityZone:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Description: AZ for RDS Instance
+  BackupRetentionPeriod:
+    Type: String
+    Description: BackupRetentionPeriod
+  DBInstanceIdentifier:
+    Type: String
+    Description: DBInstanceIdentifier
+  DBName:
+    Default: test-db
+    Description: rds database name
+    Type: String
+    MinLength: '1'
+    MaxLength: '64'
+    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
+    ConstraintDescription: must begin with a letter and contain only alphanumeric
+      characters.
+  DBParameterGroupName:
+    Type: String
+    Description:
+  DBSecurityGroup1:
+    Type: 'AWS::EC2::SecurityGroup::Id'
+    Description: DB securitygroup.
+    ConstraintDescription: must be the name of an already created SG.
+  VPCSecurityGroup1:
+    Type: 'AWS::EC2::SecurityGroup::Id'
+    Description: DB securitygroup.
+    ConstraintDescription: must be the name of an already created SG.
+  DBSubnetGroupName:
+    Type: String
+    Description: Give a name for DBSubnetGroupName
+    Default: Default-DBSubnetGroupName
+  DBSubnetGroupSubnet1:
+    Type: AWS::EC2::Subnet::Id
+    Description: Give a name for DBSubnetGroupName
+    Default: Default-DBSubnetGroupName
+  DBSubnetGroupSubnet2:
+    Type: AWS::EC2::Subnet::Id
+    Description: Give a name for DBSubnetGroupName
+    Default: Default-DBSubnetGroupName
+
+  Engine:
+    Type: String
+    Description: DB Engine
+  EngineVersion:
+    Type: String
+    Description: DB Engine Version
+  Iops:
+    Type: String
+    Description: Iops required for DB
+  KmsKeyId:
+    Type: String
+    Description: The ARN of the AWS KMS key that's used to encrypt the DB instance
+  LicenseModel:
+    Type: String
+    Description: License model information for this DB instance
+    Default: license-included
+    AllowedValues: [ bring-your-own-license, #Oracle
+                     license-included #Oracle / MS SQL ] 
+                   ]
+
+  Name1:
+    Type: String
+    Description: Name of RDS Instance 1
+  Purpose1:
+    Type: String
+    Description: Purpose of RDS Instance 1
+  EnvironmentType1:
+    Type: String
+    Description: Environment Type of RDS Instance 1
+  EnvironmentID1:
+    Type: String
+    Default: Test
+    Description: EnvironmentID of RDS Instance 1
+  ApplicationOwner1:
+    Type: String
+    Description: Application Owner Type of RDS Instance 1
+  Project1:
+    Type: String
+    Default: InfraEOPS
+    Description: Project of RDS Instance 1
+  SID1:
+    Type: String
+    Default: NoSID
+    Description: SID of RDS Instance 1
+  Owner1:
+    Type: String
+    Default: Cadent_EO_Cloud@hcl.com
+    Description: Owner of RDS Instance 1
+  BAUStatus1:
+    Type: String
+    Default: NonLive
+    Description: BAUStatus of RDS Instance 1
+  DateOfCommission1:
+    Type: String
+    Description: DateOfCommission of RDS Instance 1
+  DateOfDeletion1:
+    Type: String
+    Description: DateOf Deletion of RDS Instance 1
+  ApplicationGroup1:
+    Type: String
+    Description: ApplicationGroup of RDS Instance 1
+  Application1: 
+    Type: String
+    Description: Application of RDS Instance 1
+
+Resources:
+  RDSInstance1:
+    Type: AWS::RDS::DBInstance
+    Properties: 
+      AllocatedStorage: !Ref AllocatedStorage
+      AllowMajorVersionUpgrade: !Ref AllowMajorVersionUpgrade
+      AssociatedRoles: 
+        - RoleArn: !Ref AssociatedRoles
+      AutoMinorVersionUpgrade: !Ref AutoMinorVersionUpgrade
+      AvailabilityZone: !Ref AvailabilityZone
+      BackupRetentionPeriod: !Ref BackupRetentionPeriod
+      CACertificateIdentifier: !Ref CACertificateIdentifier
+      CopyTagsToSnapshot: "true"
+      DBInstanceClass: !Ref DBInstanceClass
+      DBInstanceIdentifier: !Ref DBInstanceIdentifier
+      DBName: !Ref DBName
+      DBParameterGroupName: String
+      DBSecurityGroups: 
+        - !Ref DBSecurityGroup1
+      VPCSecurityGroups: 
+        - !Ref VPCSecurityGroup1
+      DBSnapshotIdentifier: String
+      DBSubnetGroupName: !Ref RDSDBSubnetGroup1
+      DeleteAutomatedBackups: "false"
+      DeletionProtection: "true"
+      Engine: !Ref Engine
+      EngineVersion: !Ref EngineVersion
+      Iops: !Ref Iops
+      KmsKeyId: !Ref KmsKeyId
+      LicenseModel: !Ref LicenseModel
+      MasterUsername: !Ref MasterUsername
+      MasterUserPassword: !Ref MasterUserPassword
+      MaxAllocatedStorage: !Ref MaxAllocatedStorage
+      MultiAZ: !Ref MultiAZ 
+      StorageEncrypted: "true"
+      StorageType: !Ref StorageType
+      OptionGroupName: String
+      Port: String
+      #DBClusterIdentifier: String
+      #CharacterSetName: String
+      #Domain: String
+      #DomainIAMRoleName: String
+      #EnableCloudwatchLogsExports: 
+      #  - String
+      #EnableIAMDatabaseAuthentication: Boolean
+      #EnablePerformanceInsights: Boolean
+      #MonitoringInterval: Integer
+      #MonitoringRoleArn: String      
+      #PerformanceInsightsKMSKeyId: String
+      #PerformanceInsightsRetentionPeriod: Integer      
+      #PreferredBackupWindow: String
+      #PreferredMaintenanceWindow: String
+      #ProcessorFeatures: 
+      #  - ProcessorFeature
+      #PromotionTier: Integer
+      #PubliclyAccessible: Boolean
+      #SourceDBInstanceIdentifier: String
+      #SourceRegion: String
+      #Timezone: String
+      #UseDefaultProcessorFeatures: Boolean
+      Tags:
+        - Key: Name
+          Value: !Ref Name1
+        - Key: Purpose
+          Value: !Ref Purpose1
+        - Key: EnvironmentType
+          Value: !Ref EnvironmentType1
+        - Key: ApplicationOwner
+          Value: !Ref ApplicationOwner1
+        - Key: Project
+          Value: !Ref Project1
+        - Key: Service-Type
+          Value: !Ref ServiceType1
+        - Key: Application
+          Value: !Ref Application1
+        - Key: ApplicationGroup
+          Value: !Ref ApplicationGroup1
+        - Key: BAUStatus
+          Value: !Ref BAUStatus1
+        - Key: EnvironmentID
+          Value: !Ref EnvironmentID1
+        - Key: DateOfCommission
+          Value: !Ref DateOfCommission1
+        - Key: DateOfDeletion
+          Value: !Ref DateOfDeletion1
+        - Key: SID
+          Value: !Ref SID1
+        - Key: Owner
+          Value: !Ref Owner1
+  RDSDBSubnetGroup1: 
+    Type: "AWS::RDS::DBSubnetGroup"
+    Properties: 
+      SubnetGroupDescription: DBSubnetGroup for RDS
+      SubnetIds: 
+        - !Ref DBSubnetGroupSubnet1
+        - !Ref DBSubnetGroupSubnet2
+      Tags: 
+        - 
+          Key: Name
+          Value: !Ref DBSubnetGroupName
+  RDSDBParameterGroup1:
+  Type: 'AWS::RDS::DBParameterGroup'
+  Properties:
+    Description: CloudFormation Sample MySQL Parameter Group
+    Family: mysql8.0
+    Parameters:
+      sql_mode: IGNORE_SPACE
+      max_allowed_packet: 1024
+      innodb_buffer_pool_size: '{DBInstanceClassMemory*3/4}'
+
+Outputs:
+  DBidentifier:
+    Description: InstanceId of the newly created RDS instance
+    Value: !Ref 'RDSInstance1'
+  Class:
+    Description: DBInstanceIdentifier of the newly created RDS instance
+    Value: !GetAtt RDSInstance1.DBInstanceIdentifier
+  Engine:
+    Description: InstanceId of the newly created RDS instance
+    Value: !GetAtt RDSInstance1.Engine
