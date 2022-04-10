@@ -1,0 +1,140 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS CloudFormation Sample Template creates an ec2 instance 
+              with additional 100gb ebs volume
+              Latest Amazon public AMI pulled from SSM parameter'
+Parameters:
+  
+  SecurityGroupCommon1:
+    Type: 'AWS::EC2::SecurityGroup::Id'
+    Description: Proj specific Wintel securitygroup.
+    ConstraintDescription: must be the name of an already created SG.
+  SecurityGroupApp1:
+    Type: 'AWS::EC2::SecurityGroup::Id'
+    Description: App specific securitygroup.
+    ConstraintDescription: must be the name of an already created App specific SG.
+  PreferredSubnet:
+    Type: 'AWS::EC2::Subnet::Id'
+    Description: Subnet
+    ConstraintDescription: must be the name of an existing SubnetId.
+  StandbySubnet:
+    Type: 'AWS::EC2::Subnet::Id'
+    Description: Subnet
+    ConstraintDescription: must be the name of an existing SubnetId.
+  Name1:
+    Type: String
+    Description: Name of FSx 1
+  Purpose1:
+    Type: String
+    Description: Purpose of FSx 1
+  EnvironmentType1:
+    Type: String
+    Description: Environment Type of FSx 1
+  EnvironmentID1:
+    Type: String
+    Default: Test
+    Description: EnvironmentID of FSx 1
+  ApplicationOwner1:
+    Type: String
+    Description: Application Owner Type of FSx 1
+  Project1:
+    Type: String
+    Default: InfraEOPS
+    Description: Project of FSx 1
+  SID1:
+    Type: String
+    Default: NoSID
+    Description: SID of FSx 1
+  Owner1:
+    Type: String
+    Default: Cadent_EO_Cloud@hcl.com
+    Description: Owner of FSx 1
+  BAUStatus1:
+    Type: String
+    Default: NonLive
+    Description: BAUStatus of FSx 1
+  DateOfCommission1:
+    Type: String
+    Description: DateOfCommission of FSx 1
+  DateOfDeletion1:
+    Type: String
+    Description: DateOf Deletion of FSx 1
+  ApplicationGroup1:
+    Type: String
+    Description: ApplicationGroup of FSx 1
+  Application1: 
+    Type: String
+    Description: Application of FSx 1
+Resources:
+  FSx1:
+    Type: AWS::FSx::FileSystem
+    Properties:
+      FileSystemType: WINDOWS
+      KmsKeyId: String
+      SecurityGroupIds: [!Ref 'SecurityGroupCommon1',!Ref 'SecurityGroupApp1']
+      StorageCapacity: 100
+      StorageType: SSD 
+      SubnetIds: [!Ref 'PreferredSubnet',!Ref 'StandbySubnet']
+        
+      WindowsConfiguration:
+        ThroughputCapacity: 8
+        Aliases: 
+            - gd-uk.net         
+        WeeklyMaintenanceStartTime: '4:16:30'
+        DailyAutomaticBackupStartTime: '01:00'
+        AutomaticBackupRetentionDays: 30
+        CopyTagsToBackups: "true"
+        DeploymentType: MULTI_AZ_1
+        PreferredSubnetId: !ImportValue PreferredSubnet
+        SelfManagedActiveDirectoryConfiguration:
+          DnsIps:
+            - !Select 
+              - 0
+              - !Split 
+                - ','
+                - !ImportValue MySelfManagedADDnsIpAddresses
+          DomainName:
+            'Fn::ImportValue': SelfManagedADDomainName
+          FileSystemAdministratorsGroup: MyDomainAdminGroup
+          OrganizationalUnitDistinguishedName: 'OU=FileSystems,DC=corp,DC=example,DC=com'
+          UserName: Admin
+          Password: !Join 
+            - ':'
+            - - '{{resolve:secretsmanager'
+              - !ImportValue MySelfManagedADCredentialName
+              - 'SecretString}}'
+        
+      Tags:
+        - Key: Name
+          Value: !Ref Name1
+        - Key: Purpose
+          Value: !Ref Purpose1
+        - Key: EnvironmentType
+          Value: !Ref EnvironmentType1
+        - Key: ApplicationOwner
+          Value: !Ref ApplicationOwner1
+        - Key: Project
+          Value: !Ref Project1
+        - Key: Service-Type
+          Value: !Ref ServiceType1
+        - Key: Application
+          Value: !Ref Application1
+        - Key: ApplicationGroup
+          Value: !Ref ApplicationGroup1
+        - Key: BAUStatus
+          Value: !Ref BAUStatus1
+        - Key: EnvironmentID
+          Value: !Ref EnvironmentID1
+        - Key: DateOfCommission
+          Value: !Ref DateOfCommission1
+        - Key: DateOfDeletion
+          Value: !Ref DateOfDeletion1
+        - Key: SID
+          Value: !Ref SID1
+        - Key: Owner
+          Value: !Ref Owner1
+  
+Outputs:
+  FileSystemId:
+    Description: FSx Id of the newly created FSx
+    Value: !Ref 'FSx1'
+ 
