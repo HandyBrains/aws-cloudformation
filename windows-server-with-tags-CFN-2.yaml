@@ -1,5 +1,7 @@
 # Completed - Can be used by all 
 # Latest Ami Id is fetched automatically from SSM Parameter (Windows Server 2022)
+# Please note Termination protection enabled- 
+# If you want to delete your stack, you need to disable termination protection on ec2 instance console
 #
 #
 #
@@ -38,10 +40,21 @@ Parameters:
     Description: Name of an existing EC2 KeyPair to enable access to the instance
     Type: AWS::EC2::KeyPair::KeyName
     ConstraintDescription: must be the name of an already created EC2 KeyPair.
-  #EC2IAMRole1:
+
+   #EC2IAMRole1:
    # Description: Name of an existing EC2 IAM Role
    # Type: AWS::IAM::InstanceProfile::ProfileName
    # ConstraintDescription: must be the name of an already created EC2 KeyPair.
+  EBSEncryption:
+    Type: String
+    Description: EBS Volume Encription needed or not
+    ConstraintDescription: must be true or false
+
+  
+  EBSEncryptionKmsKeyId:
+    Type: String
+    Default: enter kms key id
+    ConstraintDescription: must be the name of an already created encrption key id.
 
   SecurityGroupCommon1:
     Type: 'AWS::EC2::SecurityGroup::Id'
@@ -137,6 +150,7 @@ Resources:
       KeyName: !Ref 'KeyName1'
       #IamInstanceProfile: !Ref 'EC2IAMRole1'
       ImageId: !Ref 'LatestAmiId'
+      DisableApiTermination: "true"
       PropagateTagsToVolumeOnCreation: "true"
       BlockDeviceMappings:
         -
@@ -145,7 +159,9 @@ Resources:
             VolumeSize: 100
             VolumeType: "gp3"
             #Iops: "200"
-            DeleteOnTermination: "true"    
+            DeleteOnTermination: "true" 
+            KmsKeyId: !Ref EBSEncryptionKmsKeyId
+            Encrypted: !Ref EBSEncryption   
       Tags:
         - Key: Name
           Value: !Ref Name1
@@ -194,6 +210,8 @@ Resources:
     Properties:
       Size: 100
       VolumeType: gp3
+      KmsKeyId: !Ref EBSEncryptionKmsKeyId
+      Encrypted: !Ref EBSEncryption
       AvailabilityZone: !GetAtt EC2Instance1.AvailabilityZone
       Tags:
         - Key: Name

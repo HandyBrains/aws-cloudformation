@@ -1,6 +1,6 @@
 # Completed - Can be used by all 
 # Please note Termination protection enabled- 
-# If you want to delete your stack, you need to disable termination protection
+# If you want to delete your stack, you need to disable termination protection on ec2 instance console
 #
 #
 #
