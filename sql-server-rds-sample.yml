@@ -24,11 +24,11 @@ Parameters:
     Description: Multi AZ true or false
   MasterUserPassword:
     Type: String
-    Default: 'mymasteruserpasswd'
+    Default: 'admin'
     Description: MasterUserPassword
   MasterUsername:
     Type: String
-    Default: 'mymasteruser'
+    Default: 'admin'
     Description: MasterUsername
   StorageEncrypted:
     Type: String
@@ -36,8 +36,8 @@ Parameters:
     Description: StorageEncrypted true or false
   StorageType: 
     Type: String
-    Default: gp2
-    Description: standard | gp2 | io1
+    Default: ssd
+    Description: ssd or hdd
 
   AllowMajorVersionUpgrade:
     Type: String
@@ -186,7 +186,7 @@ Resources:
       CopyTagsToSnapshot: "true"
       DBInstanceClass: !Ref DBInstanceClass
       DBInstanceIdentifier: !Ref DBInstanceIdentifier
-      #DBName: !Ref DBName
+      DBName: !Ref DBName
       DBParameterGroupName: !Ref DBParameterGroupName
       #DBSecurityGroups: [!Ref DBSecurityGroup1]
       VPCSecurityGroups: [!Ref VPCSecurityGroup1]
