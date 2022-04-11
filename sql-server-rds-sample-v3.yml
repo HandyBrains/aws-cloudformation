@@ -1,0 +1,345 @@
+# Tested - Works fine
+# DB Name property is Not applicable for  SQL Server. Must be null
+#
+#
+#
+#
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS CloudFormation Sample Template creates an rds instance with SQL Server '
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: =====RDS CONFIGURATION Details=============================
+      Parameters:
+      - DBInstanceIdentifier
+      - DBInstanceClass
+      - MultiAZ
+      - MasterUsername
+      - MasterUserPassword
+      - Engine
+      - EngineVersion
+      - LicenseModel
+      - AllocatedStorage
+      - MaxAllocatedStorage
+      - StorageType
+      - StorageEncrypted
+      - KmsKeyId
+      - AllowMajorVersionUpgrade
+      - AutoMinorVersionUpgrade
+     
+    - Label:
+        default: =====NETWORK SETTINGS Subnet,SG,Port,ParameterGroup,OptionGroup======
+      Parameters:
+      - AvailabilityZone
+      - DBSubnetGroupName
+      - DBSubnetGroupSubnet1
+      - DBSubnetGroupSubnet2
+      - VPCSecurityGroup1
+      - Port
+      - DBParameterGroupName
+      - OptionGroupName
+      - AssociatedRoles
+      - BackupRetentionPeriod
+    - Label:
+        default: =====AWS TAGS for resources created========================
+      Parameters:
+        - Name1
+        - Application1
+        - ApplicationGroup1
+        - Project1
+        - BAUStatus1
+        - EnvironmentType1
+        - Purpose1
+        - EnvironmentID1
+        - Owner1
+        - ApplicationOwner1
+        - SID1
+Parameters:
+  DBInstanceIdentifier:
+    Type: String
+    Default: testsqlserverrds
+    Description: DBInstanceIdentifier
+  DBInstanceClass:
+    Type: String
+    Default: db.t3.xlarge
+    AllowedValues: [db.t3.xlarge,db.m5.large,db.m5.xlarge]
+    Description: DBInstanceClass
+  MultiAZ:
+    Type: String
+    Default: 'false'
+    Description: Multi AZ true or false
+  
+  MasterUsername:
+    Type: String
+    Default: 'mymasteruser'
+    Description: MasterUsername
+  MasterUserPassword:
+    Type: String
+    Default: 'mymasterpasswd'
+    Description: MasterUserPassword
+  Engine:
+    Type: String
+    Description: The name of the database engine that you want to use for this DB instance.
+    Default: sqlserver-se
+    AllowedValues: [sqlserver-se,sqlserver-ee,sqlserver-web,oracle-se,mysql]
+  EngineVersion:
+    Type: String
+    Default: 15.00.4153.1.v1
+    AllowedValues: [15.00.4153.1.v1,15.00.4073.23.v1,15.00.4043.16.v1]
+    Description: The version number of the database engine to use.
+  
+  LicenseModel:
+    Type: String
+    Description: License model information for this DB instance
+    Default: license-included
+    AllowedValues: [ bring-your-own-license, #Oracle
+                     license-included #Oracle / MS SQL ] 
+                   ]
+  
+  AllocatedStorage:
+    Type: String
+    Default: 50
+    Description: storage for RDS Instance
+  MaxAllocatedStorage:
+    Type: String
+    Default: 100
+    Description: storage for RDS Instance
+  StorageEncrypted:
+    Type: String
+    Default: true
+    Description: StorageEncrypted true or false
+  StorageType: 
+    Type: String
+    Default: gp2
+    Description: standard | gp2 | io1
+  #Iops:
+  #  Type: String
+  #  Default: 300
+  #  Description: Iops required for DB
+  KmsKeyId:
+    Type: String
+    Description: The ARN of the AWS KMS key that's used to encrypt the DB instance
+
+  AllowMajorVersionUpgrade:
+    Type: String
+    Default: false
+    Description: AllowMajorVersionUpgrade true or false
+  AutoMinorVersionUpgrade:
+    Type: String
+    Default: true
+    Description: AutoMinorVersionUpgrade true or false
+  AvailabilityZone:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Default: eu-west-1a
+    Description: AZ for RDS Instance
+  AssociatedRoles:
+    Type: String
+    Description: Enter the ARN of the IAM Role
+  BackupRetentionPeriod:
+    Type: String
+    Description: BackupRetentionPeriod
+  
+  #DBName:
+    #Default: testdb
+    #Description: rds database name - Leave it blank for sql server rds
+    #Type: String
+    #MinLength: '1'
+    #MaxLength: '64'
+    #AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
+    #ConstraintDescription: must begin with a letter and contain only alphanumeric
+  DBParameterGroupName:
+    Type: String
+    Description: Choose the DBParameterGroupName
+    Default: default.sqlserver-se-15.0
+    AllowedValues: [default.sqlserver-se-15.0,default.sqlserver-se-11.0,sqlserver-se-13.0]
+ 
+  VPCSecurityGroup1:
+    Type: 'AWS::EC2::SecurityGroup::Id'
+    Description: DB securitygroup.
+    ConstraintDescription: must be the name of an already created SG.
+  DBSubnetGroupName:
+    Type: String
+    Description: Give a name for DBSubnetGroupName
+    Default: new-db-subnet-group
+    ConstraintDescription: Must contain no more than 255 lowercase alphanumeric characters or hyphens. Must not be "Default".
+  DBSubnetGroupSubnet1:
+    Type: AWS::EC2::Subnet::Id
+    Description: choose DB Subnet Group Subnet1
+    Default: subnet1
+  DBSubnetGroupSubnet2:
+    Type: AWS::EC2::Subnet::Id
+    Description: choose DB Subnet Group Subnet2
+    Default: subnet2
+
+  
+  Port: 
+    Type: String
+    Description: Port
+    Default: 1433
+  
+  OptionGroupName: 
+    Type: String
+    Description: OptionGroupName
+  #DBSnapshotIdentifier: 
+   # Type: String
+   # Description: DBSnapshotIdentifier
+
+  Name1:
+    Type: String
+    Default: test-resource
+    Description: Name of RDS Instance 1
+  Purpose1:
+    Type: String
+    Default: testPurpose1
+    Description: Purpose of RDS Instance 1
+  EnvironmentType1:
+    Type: String
+    Default: testEnvironmentType
+    Description: Environment Type of RDS Instance 1
+  EnvironmentID1:
+    Type: String
+    Default: TestEnvironmentID
+    Description: EnvironmentID of RDS Instance 1
+  ApplicationOwner1:
+    Type: String
+    Default: Test
+    Description: Application Owner Type of RDS Instance 1
+  Project1:
+    Type: String
+    Default: InfraEOPS
+    Description: Project of RDS Instance 1
+  SID1:
+    Type: String
+    Default: NoSID
+    Description: SID of RDS Instance 1
+  Owner1:
+    Type: String
+    Default: Cadent_EO_Cloud@hcl.com
+    Description: Owner of RDS Instance 1
+  BAUStatus1:
+    Type: String
+    Default: NonLive
+    Description: BAUStatus of RDS Instance 1
+  ApplicationGroup1:
+    Type: String
+    Default: NonSAP
+    Description: ApplicationGroup of RDS Instance 1
+  Application1: 
+    Type: String
+    Default: TestApp
+    Description: Application of RDS Instance 1
+Resources:
+  RDSInstance1:
+    Type: AWS::RDS::DBInstance
+    Properties: 
+      AllocatedStorage: !Ref AllocatedStorage
+      AllowMajorVersionUpgrade: !Ref AllowMajorVersionUpgrade
+      #AssociatedRoles: [RoleArn: !Ref AssociatedRoles]
+      AutoMinorVersionUpgrade: !Ref AutoMinorVersionUpgrade
+      AvailabilityZone: !Ref AvailabilityZone
+      BackupRetentionPeriod: !Ref BackupRetentionPeriod
+      CopyTagsToSnapshot: "true"
+      DBInstanceClass: !Ref DBInstanceClass
+      DBInstanceIdentifier: !Ref DBInstanceIdentifier
+      #DBName: !Ref DBName   #not needed for sql server
+      DBParameterGroupName: !Ref DBParameterGroupName
+      VPCSecurityGroups: [!Ref VPCSecurityGroup1]
+      DBSubnetGroupName: !Ref RDSDBSubnetGroup1
+      DeleteAutomatedBackups: "false"
+      DeletionProtection: "true"
+      Engine: !Ref Engine
+      EngineVersion: !Ref EngineVersion
+      #Iops: !Ref Iops
+      KmsKeyId: !Ref KmsKeyId
+      LicenseModel: !Ref LicenseModel
+      MasterUsername: !Ref MasterUsername
+      MasterUserPassword: !Ref MasterUserPassword
+      MaxAllocatedStorage: !Ref MaxAllocatedStorage
+      MultiAZ: !Ref MultiAZ 
+      StorageEncrypted: "true"
+      StorageType: !Ref StorageType
+      OptionGroupName: !Ref OptionGroupName
+      Port: !Ref Port
+      #CACertificateIdentifier: !Ref CACertificateIdentifier
+      #DBSnapshotIdentifier: !Ref DBSnapshotIdentifier
+      #DBSecurityGroups: [!Ref DBSecurityGroup1]
+      #DBClusterIdentifier: String
+      #CharacterSetName: String
+      #Domain: String
+      #DomainIAMRoleName: String
+      #EnableCloudwatchLogsExports: 
+      #  - String
+      #EnableIAMDatabaseAuthentication: Boolean
+      #EnablePerformanceInsights: Boolean
+      #MonitoringInterval: Integer
+      #MonitoringRoleArn: String      
+      #PerformanceInsightsKMSKeyId: String
+      #PerformanceInsightsRetentionPeriod: Integer      
+      #PreferredBackupWindow: String
+      #PreferredMaintenanceWindow: String
+      #ProcessorFeatures: 
+      #  - ProcessorFeature
+      #PromotionTier: Integer
+      #PubliclyAccessible: Boolean
+      #SourceDBInstanceIdentifier: String
+      #SourceRegion: String
+      #Timezone: String
+      #UseDefaultProcessorFeatures: Boolean
+      Tags:
+        - Key: Name
+          Value: !Ref Name1
+        - Key: Purpose
+          Value: !Ref Purpose1
+        - Key: EnvironmentType
+          Value: !Ref EnvironmentType1
+        - Key: ApplicationOwner
+          Value: !Ref ApplicationOwner1
+        - Key: Project
+          Value: !Ref Project1
+        - Key: Application
+          Value: !Ref Application1
+        - Key: ApplicationGroup
+          Value: !Ref ApplicationGroup1
+        - Key: BAUStatus
+          Value: !Ref BAUStatus1
+        - Key: EnvironmentID
+          Value: !Ref EnvironmentID1
+        - Key: SID
+          Value: !Ref SID1
+        - Key: Owner
+          Value: !Ref Owner1
+  RDSDBSubnetGroup1: 
+    Type: "AWS::RDS::DBSubnetGroup"
+    Properties: 
+      DBSubnetGroupDescription: DBSubnetGroupforRDS
+      DBSubnetGroupName: !Ref DBSubnetGroupName
+      SubnetIds: [!Ref DBSubnetGroupSubnet1,!Ref DBSubnetGroupSubnet2]
+      Tags: 
+        - Key: Purpose
+          Value: !Ref Purpose1
+        - Key: EnvironmentType
+          Value: !Ref EnvironmentType1
+        - Key: ApplicationOwner
+          Value: !Ref ApplicationOwner1
+        - Key: Project
+          Value: !Ref Project1
+        - Key: Application
+          Value: !Ref Application1
+        - Key: ApplicationGroup
+          Value: !Ref ApplicationGroup1
+
+  #RDSDBParameterGroup1:
+   # Type: 'AWS::RDS::DBParameterGroup'
+    #Properties:
+     # Description: CloudFormation Sample SQL Server Parameter Group
+      #Family: sqlserver-se-15.0
+      #Parameters:
+       # sql_mode: IGNORE_SPACE
+       # max_allowed_packet: 1024
+       # innodb_buffer_pool_size: '{DBInstanceClassMemory*3/4}'
+
+Outputs:
+  DBidentifier:
+    Description: InstanceId of the newly created RDS instance
+    Value: !Ref 'RDSInstance1'
