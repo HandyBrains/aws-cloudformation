@@ -178,7 +178,7 @@ Parameters:
     Type: String
     Default: ScheduledHours
     Description: OperatingHours of rds ScheduledHours | 24X7
-  StarStopSchedule1: 
+  StartStopSchedule1: 
     Type: String
     Default: uk-montofri-9amto7pm
     Description: OperatingHours of rds uk-montofri-9amto7pm | 24X7
