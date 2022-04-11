@@ -1,0 +1,528 @@
+# wip 
+# Please note Termination protection enabled- 
+# If you want to delete your stack, you need to disable termination protection on ec2 instance console
+#
+#
+#
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS CloudFormation Template creates two  ec2 instances 
+              with additional 300gb ebs volume
+              Latest Amazon public AMI SUSE 15 SP3 '
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: =====EC2 Instance 1 CONFIGURATION =============================
+      Parameters:
+      - InstanceType1
+      - LatestAmiId1
+      - KeyName1
+      - EBSEncryption1
+      - EBSEncryptionKmsKeyId1
+      - SecurityGroupCommon1
+      - SecurityGroupApp1
+      - Subnet1 
+    - Label:
+        default: =====AWS TAGS for EC2 Instance 1 related resources =============================
+      Parameters:
+      - Name1
+      - Hostname1
+      - OperatingSystem1
+      - Application1
+      - ApplicationGroup1
+      - Project1
+      - BAUStatus1
+      - EnvironmentType1
+      - Purpose1
+      - EnvironmentID1
+      - Owner1
+      - ApplicationOwner1
+      - SID1
+      - CostCenter1
+      - OperatingHours1
+      - StartStopSchedule1
+      - DateOfCommission1
+      - DateOfDeletion1
+    - Label:
+        default: =====EC2 Instance 2 CONFIGURATION ======
+      Parameters:
+      - InstanceType2
+      - LatestAmiId2
+      - KeyName2
+      - EBSEncryption2
+      - EBSEncryptionKmsKeyId2
+      - SecurityGroupCommon2
+      - SecurityGroupApp2
+      - Subnet2
+    - Label:
+        default: =====AWS TAGS for EC2 Instance 2 related resources =============================
+      Parameters:
+      - Name2
+      - Hostname2
+      - OperatingSystem2
+      - Application2
+      - ApplicationGroup2
+      - Project2
+      - BAUStatus2
+      - EnvironmentType2
+      - Purpose2
+      - EnvironmentID2
+      - Owner2
+      - ApplicationOwner2
+      - SID2
+      - CostCenter2
+      - OperatingHours2
+      - StartStopSchedule2
+      - DateOfCommission2
+      - DateOfDeletion2
+
+Parameters:
+  InstanceType1:
+    Description: Instance1 EC2 instance type
+    Type: String
+    Default: t3.small
+    AllowedValues: [
+      t3.nano, t3.micro, t3.small, t3.medium, t3.large, t3.xlarge, t3.2xlarge,
+      m6i.large, m6i.xlarge, m6i.2xlarge, m6i.4xlarge, m6i.10xlarge,
+      m6a.large, m6a.xlarge, m6a.2xlarge, m6a.4xlarge, m6a.10xlarge,
+      m5.large, m5.xlarge, m5.2xlarge, m5.4xlarge,
+      m5a.large, m5a.xlarge, m5a.2xlarge, m5a.4xlarge,
+      c5.large, c5.xlarge, c5.2xlarge, c5.4xlarge, c5.9xlarge,
+      c6i.large, c6i.xlarge, c6i.2xlarge, c6i.4xlarge, c6i.9xlarge,
+      r5.large, r5.xlarge, r5.2xlarge, r5.4xlarge, r3.12xlarge,
+      r6i.large, r6i.xlarge, r6i.2xlarge, r6i.4xlarge, r6i.12xlarge,
+      i3.xlarge, i3.2xlarge, i3.4xlarge, i3.8xlarge,
+      x1.16xlarge,x1.32xlarge,x2i.24xlarge,x2i.16xlarge,x2i.12xlarge]
+    ConstraintDescription: must be a valid EC2 instance type. 
+  LatestAmiId1:
+    #Type:  'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Type: String
+    Default: ami-02be7a0d5d4276ce2
+    Description: Please enter the latest AMI id you want to use for this aws region
+    ConstraintDescription: must be a valid ami id for this aws region.
+  KeyName1:
+    Description: Name of an existing EC2 KeyPair to enable access to the instance
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: must be the name of an already created EC2 KeyPair.
+  EBSEncryption1:
+    Type: String
+    Default: true
+    Description: EBS Volume Encription needed true or false
+    ConstraintDescription: must be true or false
+
+  
+  EBSEncryptionKmsKeyId1:
+    Type: String
+    Default: enter kms key id
+    ConstraintDescription: must be the name of an already created encrption key id.
+  #EC2IAMRole1:
+   # Description: Name of an existing EC2 IAM Role
+   # Type: AWS::IAM::InstanceProfile::ProfileName
+   # ConstraintDescription: must be the name of an already created EC2 KeyPair.
+
+  SecurityGroupCommon1:    
+    Type: 'AWS::EC2::SecurityGroup::Id'
+    Description: Proj specific securitygroup.
+    ConstraintDescription: must be the name of an already created SG.
+  SecurityGroupApp1:
+    Type: 'AWS::EC2::SecurityGroup::Id'
+    Description: App specific securitygroup.
+    ConstraintDescription: must be the name of an already created App specific SG.
+  Subnet1:
+    Type: 'AWS::EC2::Subnet::Id'
+    Description: Subnet
+    ConstraintDescription: must be the name of an existing SubnetId.
+  Name1:
+    Type: String
+    Description: Name of instance 1
+  Purpose1:
+    Type: String
+    Description: Purpose of instance 1
+  OperatingSystem1:
+    Type: String
+    Description: OS Type of instance 1
+  CostCenter1:
+    Type: String
+    Description: Service Type of instance 1
+  EnvironmentType1:
+    Type: String
+    Description: Environment Type of instance 1
+  EnvironmentID1:
+    Type: String
+    Default: Test
+    Description: EnvironmentID of instance 1
+  ApplicationOwner1:
+    Type: String
+    Description: Application Owner Type of instance 1
+  Hostname1:
+    Type: String
+    Description: Hostname of instance 1
+  Project1:
+    Type: String
+    Default: InfraEOPS
+    Description: Project of instance 1
+  SID1:
+    Type: String
+    Default: NoSID
+    Description: SID of instance 1
+  Owner1:
+    Type: String
+    Default: Cadent_EO_Cloud@hcl.com
+    Description: Owner of instance 1
+  StartStopSchedule1:
+    Type: String
+    Default: uk-montofri-9amto5pm
+    Description: StartStopSchedule of instance 1
+  OperatingHours1:
+    Type: String
+    Default: ScheduledHours
+    Description: OperatingHours of instance 1
+  BAUStatus1:
+    Type: String
+    Default: NonLive
+    Description: BAUStatus of instance 1
+  DateOfCommission1:
+    Type: String
+    Description: DateOfCommission of instance 1
+  DateOfDeletion1:
+    Type: String
+    Description: DateOf Deletion of instance 1
+  ApplicationGroup1:
+    Type: String
+    Default: NonSAP
+    Description: ApplicationGroup of instance 1
+  Application1: 
+    Type: String
+    Default: InfraOps
+    Description: Application of instance 1
+  InstanceType2:
+    Description: Instance1 EC2 instance type
+    Type: String
+    Default: t3.small
+    AllowedValues: [
+      t3.nano, t3.micro, t3.small, t3.medium, t3.large, t3.xlarge, t3.2xlarge,
+      m6i.large, m6i.xlarge, m6i.2xlarge, m6i.4xlarge, m6i.10xlarge,
+      m6a.large, m6a.xlarge, m6a.2xlarge, m6a.4xlarge, m6a.10xlarge,
+      m5.large, m5.xlarge, m5.2xlarge, m5.4xlarge,
+      m5a.large, m5a.xlarge, m5a.2xlarge, m5a.4xlarge,
+      c5.large, c5.xlarge, c5.2xlarge, c5.4xlarge, c5.9xlarge,
+      c6i.large, c6i.xlarge, c6i.2xlarge, c6i.4xlarge, c6i.9xlarge,
+      r5.large, r5.xlarge, r5.2xlarge, r5.4xlarge, r3.12xlarge,
+      r6i.large, r6i.xlarge, r6i.2xlarge, r6i.4xlarge, r6i.12xlarge,
+      i3.xlarge, i3.2xlarge, i3.4xlarge, i3.8xlarge,
+      x1.16xlarge,x1.32xlarge,x2i.24xlarge,x2i.16xlarge,x2i.12xlarge]
+    ConstraintDescription: must be a valid EC2 instance type. 
+  LatestAmiId2:
+    #Type:  'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Type: String
+    Default: ami-02be7a0d5d4276ce2
+    Description: Please enter the latest AMI id you want to use for this aws region
+    ConstraintDescription: must be a valid ami id for this aws region.
+  KeyName2:
+    Description: Name of an existing EC2 KeyPair to enable access to the instance
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: must be the name of an already created EC2 KeyPair.
+  EBSEncryption2:
+    Type: String
+    Default: true
+    Description: EBS Volume Encription needed true or false
+    ConstraintDescription: must be true or false
+
+  
+  EBSEncryptionKmsKeyId2:
+    Type: String
+    Default: enter kms key id
+    ConstraintDescription: must be the name of an already created encrption key id.
+  #EC2IAMRole2:
+   # Description: Name of an existing EC2 IAM Role
+   # Type: AWS::IAM::InstanceProfile::ProfileName
+   # ConstraintDescription: must be the name of an already created EC2 KeyPair.
+
+  SecurityGroupCommon2:    
+    Type: 'AWS::EC2::SecurityGroup::Id'
+    Description: Proj specific securitygroup.
+    ConstraintDescription: must be the name of an already created SG.
+  SecurityGroupApp2:
+    Type: 'AWS::EC2::SecurityGroup::Id'
+    Description: App specific securitygroup.
+    ConstraintDescription: must be the name of an already created App specific SG.
+  Subnet2:
+    Type: 'AWS::EC2::Subnet::Id'
+    Description: Subnet
+    ConstraintDescription: must be the name of an existing SubnetId.
+  Name2:
+    Type: String
+    Description: Name of instance 2
+  ApplicationGroup2:
+    Type: String
+    Default: NonSAP
+    Description: ApplicationGroup of instance 2
+  Application2: 
+    Type: String
+    Default: InfraOps
+    Description: Application of instance 2
+  Purpose2:
+    Type: String
+    Description: Purpose of instance 2
+  OperatingSystem2:
+    Type: String
+    Description: OS Type of instance 2
+  CostCenter2:
+    Type: String
+    Description: Service Type of instance 2
+  EnvironmentType2:
+    Type: String
+    Description: Environment Type of instance 2
+  EnvironmentID2:
+    Type: String
+    Default: Test
+    Description: EnvironmentID of instance 2
+  ApplicationOwner2:
+    Type: String
+    Description: Application Owner Type of instance 2
+  Hostname2:
+    Type: String
+    Description: Hostname of instance 2
+  Project2:
+    Type: String
+    Default: InfraEOPS
+    Description: Project of instance 2
+  SID2:
+    Type: String
+    Default: NoSID
+    Description: SID of instance 2
+  Owner2:
+    Type: String
+    Default: Cadent_EO_Cloud@hcl.com
+    Description: Owner of instance 2
+  StartStopSchedule2:
+    Type: String
+    Default: uk-montofri-9amto5pm
+    Description: StartStopSchedule of instance 2
+  OperatingHours2:
+    Type: String
+    Default: ScheduledHours
+    Description: OperatingHours of instance 2
+  BAUStatus2:
+    Type: String
+    Default: NonLive
+    Description: BAUStatus of instance 2
+  DateOfCommission2:
+    Type: String
+    Description: DateOfCommission of instance 2
+  DateOfDeletion2:
+    Type: String
+    Description: DateOf Deletion of instance 2
+  
+  
+Resources:
+  EC2Instance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref 'InstanceType1'
+      #SecurityGroupIds: [!Ref 'SecurityGroupCommon1',!Ref 'SecurityGroupApp1']
+      #SubnetId: !Ref 'Subnet1'
+      NetworkInterfaces:  
+        - AssociatePublicIpAddress: "false"
+          DeviceIndex: "0"
+          SubnetId: !Ref 'Subnet1'
+          DeleteOnTermination: "true"
+          GroupSet: [!Ref 'SecurityGroupCommon1',!Ref 'SecurityGroupApp1']
+          #PrivateIpAddress: String
+          #PrivateIpAddresses: 
+          #  - PrivateIpAddressSpecification
+          #SecondaryPrivateIpAddressCount: Integer
+
+      KeyName: !Ref 'KeyName1'
+      DisableApiTermination: "true"
+      #IamInstanceProfile: !Ref 'EC2IAMRole1'
+      ImageId: !Ref 'LatestAmiId1'
+      PropagateTagsToVolumeOnCreation: "true"
+      BlockDeviceMappings:
+        -
+          DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 30
+            VolumeType: "gp3"
+            Iops: "3000"
+            KmsKeyId: !Ref EBSEncryptionKmsKeyId1
+            Encrypted: !Ref EBSEncryption1
+            DeleteOnTermination: "true"    
+      Tags:
+        - Key: Name
+          Value: !Ref Name1
+        - Key: Purpose
+          Value: !Ref Purpose1
+        - Key: EnvironmentType
+          Value: !Ref EnvironmentType1
+        - Key: OperatingSystem
+          Value: !Ref OperatingSystem1
+        - Key: ApplicationOwner
+          Value: !Ref ApplicationOwner1
+        - Key: Hostname
+          Value: !Ref Hostname1
+        - Key: Project
+          Value: !Ref Project1
+        - Key: Service-Type
+          Value: !Ref CostCenter1
+        - Key: Application
+          Value: !Ref Application1
+        - Key: ApplicationGroup
+          Value: !Ref ApplicationGroup1
+        - Key: OperatingHours
+          Value: !Ref OperatingHours1
+        - Key: StartStopSchedule
+          Value: !Ref StartStopSchedule1
+        - Key: BAUStatus
+          Value: !Ref BAUStatus1
+        - Key: EnvironmentID
+          Value: !Ref EnvironmentID1
+        - Key: DateOfCommission
+          Value: !Ref DateOfCommission1
+        - Key: DateOfDeletion
+          Value: !Ref DateOfDeletion1
+        - Key: SID
+          Value: !Ref SID1
+        - Key: Owner
+          Value: !Ref Owner1
+  AttachEBSVolume1:
+    Type: "AWS::EC2::VolumeAttachment"
+    Properties:
+      InstanceId: !Ref EC2Instance1
+      VolumeId: !Ref AdditionalEBSVolume1
+      Device: /dev/sdb
+  AdditionalEBSVolume1:
+    Type: "AWS::EC2::Volume"
+    Properties:
+      Size: 300
+      VolumeType: gp3
+      KmsKeyId: !Ref EBSEncryptionKmsKeyId1
+      Encrypted: !Ref EBSEncryption1
+      AvailabilityZone: !GetAtt EC2Instance1.AvailabilityZone
+      Tags:
+        - Key: Name
+          Value: !Ref Name1
+        - Key: Purpose
+          Value: !Ref Purpose1
+        - Key: EnvironmentType
+          Value: !Ref EnvironmentType1
+        - Key: Hostname
+          Value: !Ref Hostname1
+        - Key: Project
+          Value: !Ref Project1
+        - Key: Application
+          Value: !Ref Application1
+        - Key: ApplicationGroup
+          Value: !Ref ApplicationGroup1
+  EC2Instance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref 'InstanceType2'
+      #SecurityGroupIds: [!Ref 'SecurityGroupCommon2',!Ref 'SecurityGroupApp2']
+      #SubnetId: !Ref 'Subnet2'
+      NetworkInterfaces:  
+        - AssociatePublicIpAddress: "false"
+          DeviceIndex: "0"
+          SubnetId: !Ref 'Subnet2'
+          DeleteOnTermination: "true"
+          GroupSet: [!Ref 'SecurityGroupCommon2',!Ref 'SecurityGroupApp2']
+          #PrivateIpAddress: String
+          #PrivateIpAddresses: 
+          #  - PrivateIpAddressSpecification
+          #SecondaryPrivateIpAddressCount: Integer
+
+      KeyName: !Ref 'KeyName2'
+      DisableApiTermination: "true"
+      #IamInstanceProfile: !Ref 'EC2IAMRole1'
+      ImageId: !Ref 'LatestAmiId2'
+      PropagateTagsToVolumeOnCreation: "true"
+      BlockDeviceMappings:
+        -
+          DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 30
+            VolumeType: "gp3"
+            Iops: "3000"
+            KmsKeyId: !Ref EBSEncryptionKmsKeyId2
+            Encrypted: !Ref EBSEncryption2
+            DeleteOnTermination: "true"    
+      Tags:
+        - Key: Name
+          Value: !Ref Name2
+        - Key: Purpose
+          Value: !Ref Purpose2
+        - Key: EnvironmentType
+          Value: !Ref EnvironmentType2
+        - Key: OperatingSystem
+          Value: !Ref OperatingSystem2
+        - Key: ApplicationOwner
+          Value: !Ref ApplicationOwner2
+        - Key: Hostname
+          Value: !Ref Hostname2
+        - Key: Project
+          Value: !Ref Project2
+        - Key: Service-Type
+          Value: !Ref CostCenter2
+        - Key: Application
+          Value: !Ref Application2
+        - Key: ApplicationGroup
+          Value: !Ref ApplicationGroup2
+        - Key: OperatingHours
+          Value: !Ref OperatingHours2
+        - Key: StartStopSchedule
+          Value: !Ref StartStopSchedule2
+        - Key: BAUStatus
+          Value: !Ref BAUStatus2
+        - Key: EnvironmentID
+          Value: !Ref EnvironmentID2
+        - Key: DateOfCommission
+          Value: !Ref DateOfCommission2
+        - Key: DateOfDeletion
+          Value: !Ref DateOfDeletion2
+        - Key: SID
+          Value: !Ref SID2
+        - Key: Owner
+          Value: !Ref Owner2
+  AttachEBSVolume2:
+    Type: "AWS::EC2::VolumeAttachment"
+    Properties:
+      InstanceId: !Ref EC2Instance2
+      VolumeId: !Ref AdditionalEBSVolume2
+      Device: /dev/sdb
+  AdditionalEBSVolume2:
+    Type: "AWS::EC2::Volume"
+    Properties:
+      Size: 300
+      VolumeType: gp3
+      KmsKeyId: !Ref EBSEncryptionKmsKeyId2
+      Encrypted: !Ref EBSEncryption2
+      AvailabilityZone: !GetAtt EC2Instance2.AvailabilityZone
+      Tags:
+        - Key: Name
+          Value: !Ref Name2
+        - Key: Purpose
+          Value: !Ref Purpose2
+        - Key: EnvironmentType
+          Value: !Ref EnvironmentType2
+        - Key: Hostname
+          Value: !Ref Hostname2
+        - Key: Project
+          Value: !Ref Project2
+        - Key: Application
+          Value: !Ref Application2
+        - Key: ApplicationGroup
+          Value: !Ref ApplicationGroup2
+  
+Outputs:
+  Instance1:
+    Description: InstanceId of the newly created EC2 instance
+    Value: !Ref 'EC2Instance1'
+  InstanceType1:
+    Description: InstanceType of the newly created EC2 instance
+    Value: !Ref 'InstanceType1'
+  Instance2:
+    Description: InstanceId of the newly created EC2 instance
+    Value: !Ref 'EC2Instance2'
+  InstanceType2:
+    Description: InstanceType of the newly created EC2 instance
+    Value: !Ref 'InstanceType2'
