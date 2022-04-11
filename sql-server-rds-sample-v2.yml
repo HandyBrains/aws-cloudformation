@@ -1,11 +1,11 @@
-# Not-completed - Work in Progress 
+# CFN Tested - working fine 
 # DB Name property is Not applicable for  SQL Server. Must be null
-#
-#
-#
+# This template creates an rds instance and a subnet group
+# Existing ParameterGrop needs to be mentioned while launching stack
+# Existing KmsKeyId to be mentioned for encrption
 #
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'AWS CloudFormation Sample Template creates an rds instance '
+Description: 'AWS CloudFormation Sample Template creates an sql server rds instance '
 Parameters:
   DBInstanceIdentifier:
     Type: String
@@ -77,10 +77,6 @@ Parameters:
     Description: Choose the DBParameterGroupName
     Default: default.sqlserver-se-15.0
     AllowedValues: [default.sqlserver-se-15.0,default.sqlserver-se-11.0,sqlserver-se-13.0]
-  #DBSecurityGroup1:
-   # Type: 'AWS::EC2::SecurityGroup::Id'
-    #Description: DB securitygroup.
-    #ConstraintDescription: must be the name of an already created SG.
   VPCSecurityGroup1:
     Type: 'AWS::EC2::SecurityGroup::Id'
     Description: DB securitygroup.

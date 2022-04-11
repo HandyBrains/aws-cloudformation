@@ -130,9 +130,9 @@ Parameters:
     Type: String
     Description: Port
     Default: 1433
-  DBSnapshotIdentifier: 
-    Type: String
-    Description: DBSnapshotIdentifier
+  #DBSnapshotIdentifier: 
+   # Type: String
+   # Description: DBSnapshotIdentifier
 
   Name1:
     Type: String
@@ -170,17 +170,13 @@ Parameters:
     Type: String
     Default: NonLive
     Description: BAUStatus of RDS Instance 1
-  DateOfCommission1:
-    Type: String
-    Description: DateOfCommission of RDS Instance 1
-  DateOfDeletion1:
-    Type: String
-    Description: DateOf Deletion of RDS Instance 1
   ApplicationGroup1:
     Type: String
+    Default: NonSAP
     Description: ApplicationGroup of RDS Instance 1
   Application1: 
     Type: String
+    Default: TestApp
     Description: Application of RDS Instance 1
 
 Resources:
@@ -259,10 +255,6 @@ Resources:
           Value: !Ref BAUStatus1
         - Key: EnvironmentID
           Value: !Ref EnvironmentID1
-        - Key: DateOfCommission
-          Value: !Ref DateOfCommission1
-        - Key: DateOfDeletion
-          Value: !Ref DateOfDeletion1
         - Key: SID
           Value: !Ref SID1
         - Key: Owner
