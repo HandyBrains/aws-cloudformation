@@ -1,4 +1,4 @@
-# wip 
+# Working - can be used by all 
 # Please note Termination protection enabled- 
 # If you want to delete your stack, you need to disable termination protection on ec2 instance console
 #
@@ -97,7 +97,7 @@ Parameters:
   LatestAmiId1:
     #Type:  'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Type: String
-    Default: ami-02be7a0d5d4276ce2
+    Default: enter-latest-ami-id
     Description: Please enter the latest AMI id you want to use for this aws region
     ConstraintDescription: must be a valid ami id for this aws region.
   KeyName1:
@@ -215,7 +215,7 @@ Parameters:
   LatestAmiId2:
     #Type:  'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Type: String
-    Default: ami-02be7a0d5d4276ce2
+    Default: enter-latest-ami-id
     Description: Please enter the latest AMI id you want to use for this aws region
     ConstraintDescription: must be a valid ami id for this aws region.
   KeyName2:
