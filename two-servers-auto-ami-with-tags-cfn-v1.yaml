@@ -113,7 +113,7 @@ Parameters:
       x1.16xlarge,x1.32xlarge,x2i.24xlarge,x2i.16xlarge,x2i.12xlarge]
     ConstraintDescription: must be a valid EC2 instance type. 
   LatestAmiId1:
-    Description: Latest public ami aws from ssm parameter
+    Description: Latest public ami from ssm parameter
     Type:  'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-windows-latest/Windows_Server-2022-English-Full-Base'
     AllowedValues: [
@@ -243,7 +243,7 @@ Parameters:
       x1.16xlarge,x1.32xlarge,x2i.24xlarge,x2i.16xlarge,x2i.12xlarge]
     ConstraintDescription: must be a valid EC2 instance type. 
   LatestAmiId2:
-    Description: Latest public ami aws from ssm parameter
+    Description: Latest public ami from ssm parameter
     Type:  'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-windows-latest/Windows_Server-2022-English-Full-Base'
     AllowedValues: [
