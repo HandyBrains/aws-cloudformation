@@ -1,14 +1,18 @@
 #**************************************************************************************
 # Author: RK (Radhakrishnan.Madhan)
+# Team: Cloud Environment Management
 # Creation Date:      05-Apr-2022
 # Modification Date:  12-Apr-2022
+# Version: v3
+# Version-Update: Added the Root/Add ebs volume as parameter,to select the ebs size
 # Usable : Yes - Can be used by all
+# 
 #
 #
 # ************************Instructions**************************************************
-# Working - can be used by all 
+# 
 # Default EBS type is GP3 ,modify the EBS type under Resource block if you want io1,io2 etc.
-# If you want to delete your stack, you need to disable termination protection on ec2 instance console
+# If you want to update/delete your stack, you need to disable termination protection on ec2 instance console
 # 
 #
 #
