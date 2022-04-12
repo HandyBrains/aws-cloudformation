@@ -1,13 +1,23 @@
+#**************************************************************************************
+# Author: RK (radhakrishnan.madhan)
+# Creation Date: 05-Apr-2022
+# Modification Date: 12-Apr-2022
+#
+#
+#
+# ************************Instructions**************************************************
 # Working - can be used by all 
-# Please note Termination protection enabled- 
+# Default EBS type is GP3 ,modify the EBS type under Resource block if you want io1,io2 etc.
 # If you want to delete your stack, you need to disable termination protection on ec2 instance console
+# 
 #
 #
 #
+#****************************************************************************************
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'AWS CloudFormation Template creates two  ec2 instances 
-              with additional 300gb ebs volume
-              Latest Amazon public AMI SUSE 15 SP3 '
+              with additional 100 gb ebs volume
+              Latest AMI Id that you mention '
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
