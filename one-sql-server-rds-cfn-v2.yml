@@ -1,11 +1,20 @@
-# Not-completed - Work in Progress 
+#**************************************************************************************
+# Author: RK (Radhakrishnan.Madhan)
+# Team: Cloud Environment Management
+# Creation Date:      05-Apr-2022
+# Modification Date:  12-Apr-2022
+# Version: v2
+# Version-Update: without parameter group/label 
+# Usable : Yes 
+# ********************Instructions****************************************
+# CFN Tested - working fine 
 # DB Name property is Not applicable for  SQL Server. Must be null
-#
-#
-#
-#
+# This template creates an rds instance and a subnet group
+# Existing DB ParameterGroup needs to be mentioned while launching stack
+# Existing KmsKeyId to be mentioned for encrption
+#**************************************************************************
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'AWS CloudFormation Sample Template creates an rds instance '
+Description: 'AWS CloudFormation Sample Template creates an sql server rds instance '
 Parameters:
   DBInstanceIdentifier:
     Type: String
@@ -77,10 +86,6 @@ Parameters:
     Description: Choose the DBParameterGroupName
     Default: default.sqlserver-se-15.0
     AllowedValues: [default.sqlserver-se-15.0,default.sqlserver-se-11.0,sqlserver-se-13.0]
-  #DBSecurityGroup1:
-   # Type: 'AWS::EC2::SecurityGroup::Id'
-    #Description: DB securitygroup.
-    #ConstraintDescription: must be the name of an already created SG.
   VPCSecurityGroup1:
     Type: 'AWS::EC2::SecurityGroup::Id'
     Description: DB securitygroup.
@@ -128,7 +133,7 @@ Parameters:
     Description: OptionGroupName
   Port: 
     Type: String
-    Description: Port
+    Description: Port number mostly 1433
     Default: 1433
   #DBSnapshotIdentifier: 
    # Type: String
@@ -140,19 +145,19 @@ Parameters:
     Description: Name of RDS Instance 1
   Purpose1:
     Type: String
-    Default: testPurpose1
+    Default: testPurpose
     Description: Purpose of RDS Instance 1
   EnvironmentType1:
     Type: String
-    Default: testEnvironmentType
-    Description: Environment Type of RDS Instance 1
+    Default: Test
+    Description: Test|Development|Staging nvironment Type of RDS Instance 1
   EnvironmentID1:
     Type: String
     Default: TestEnvironmentID
     Description: EnvironmentID of RDS Instance 1
   ApplicationOwner1:
     Type: String
-    Default: Test
+    Default: Cadent_EO_Cloud@hcl.com
     Description: Application Owner Type of RDS Instance 1
   Project1:
     Type: String
@@ -178,6 +183,14 @@ Parameters:
     Type: String
     Default: TestApp
     Description: Application of RDS Instance 1
+  OperatingHours1: 
+    Type: String
+    Default: ScheduledHours
+    Description: OperatingHours of rds ScheduledHours | 24X7
+  StartStopSchedule1: 
+    Type: String
+    Default: uk-montofri-9amto7pm
+    Description: OperatingHours of rds uk-montofri-9amto7pm | 24X7
 
 Resources:
   RDSInstance1:
@@ -259,6 +272,10 @@ Resources:
           Value: !Ref SID1
         - Key: Owner
           Value: !Ref Owner1
+        - Key: OperatingHours
+          Value: !Ref OperatingHours1
+        - Key: StartStopSchedule
+          Value: !Ref StartStopSchedule1
   RDSDBSubnetGroup1: 
     Type: "AWS::RDS::DBSubnetGroup"
     Properties: 

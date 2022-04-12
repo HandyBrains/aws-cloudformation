@@ -3,9 +3,9 @@
 # Team: Cloud Environment Management
 # Creation Date:      05-Apr-2022
 # Modification Date:  12-Apr-2022
-# Version: v1
-# Version-Update: 
-# Usable : Yes 
+# Version: v2
+# Version-Update: Modified EBS size to 100 GB each
+# Usable : Yes - Can be used by all
 # 
 #************************Instructions**************************************************
 # 
@@ -14,11 +14,11 @@
 # Check IMACD and edit the EBS VOLUME SIZE
 # For terminate -enable the delete protection
 #
-#***********************************************************************
+#***************************************************************************************
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'AWS CloudFormation Template creates two  ec2 instances 
-              with additional 300gb ebs volume
-              Latest Amazon public AMI SUSE 15 SP3 '
+              with 100GB Root volume and 100 GB additional ebs volume
+              Latest AMI Id that you mention '
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -108,7 +108,7 @@ Parameters:
   LatestAmiId1:
     #Type:  'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Type: String
-    Default: enter-latest-ami-id
+    Default: ami-0782eaff65f13ad4e
     Description: Please enter the latest AMI id you want to use for this aws region
     ConstraintDescription: must be a valid ami id for this aws region.
   KeyName1:
@@ -226,7 +226,7 @@ Parameters:
   LatestAmiId2:
     #Type:  'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Type: String
-    Default: enter-latest-ami-id
+    Default: ami-0782eaff65f13ad4e
     Description: Please enter the latest AMI id you want to use for this aws region
     ConstraintDescription: must be a valid ami id for this aws region.
   KeyName2:
@@ -353,7 +353,7 @@ Resources:
         -
           DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: 30
+            VolumeSize: 100
             VolumeType: "gp3"
             Iops: "3000"
             KmsKeyId: !Ref EBSEncryptionKmsKeyId1
@@ -405,7 +405,7 @@ Resources:
   AdditionalEBSVolume1:
     Type: "AWS::EC2::Volume"
     Properties:
-      Size: 300
+      Size: 100
       VolumeType: gp3
       KmsKeyId: !Ref EBSEncryptionKmsKeyId1
       Encrypted: !Ref EBSEncryption1
@@ -451,7 +451,7 @@ Resources:
         -
           DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: 30
+            VolumeSize: 100
             VolumeType: "gp3"
             Iops: "3000"
             KmsKeyId: !Ref EBSEncryptionKmsKeyId2
@@ -503,7 +503,7 @@ Resources:
   AdditionalEBSVolume2:
     Type: "AWS::EC2::Volume"
     Properties:
-      Size: 300
+      Size: 100
       VolumeType: gp3
       KmsKeyId: !Ref EBSEncryptionKmsKeyId2
       Encrypted: !Ref EBSEncryption2
