@@ -16,7 +16,7 @@
 #****************************************************************************************
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'AWS CloudFormation Template creates two  ec2 instances 
-              with additional 100 gb ebs volume
+              with 100GB Root volume and 100 GB additional ebs volume
               Latest AMI Id that you mention '
 Metadata:
   AWS::CloudFormation::Interface:
