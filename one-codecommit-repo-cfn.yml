@@ -1,0 +1,147 @@
+#**************************************************************************************
+# Author: RK (Radhakrishnan.Madhan)
+# Team: Cloud Environment Management
+# Creation Date:      05-Apr-2022
+# Modification Date:  12-Apr-2022
+# Version: v1
+# Version-Update: 
+# Usable : no, wip 
+# ********************Instructions****************************************
+# Not-completed - Work in Progress 
+# DB Name property is Not applicable for  SQL Server. Must be null
+#
+#
+#
+#********************************************************************
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS CloudFormation Sample Template creates an rds instance '
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: =====Code commit CONFIGURATION =============================
+      Parameters:
+      - RepositoryDescription
+      - RepositoryName
+      - Bucket
+      - Key
+    - Label:
+        default: =====AWS TAGS for code commitrelated resources =============================
+      Parameters:
+        - Name1
+        - Application1
+        - ApplicationGroup1
+        - Project1
+        - BAUStatus1
+        - EnvironmentType1
+        - Purpose1
+        - EnvironmentID1
+        - Owner1
+        - ApplicationOwner1
+        - SID1
+
+
+Parameters:
+  RepositoryDescription:
+    Type: String
+    Default: testrepo for test work
+    Description: please enter Repository Description
+  RepositoryName:
+    Type: String
+    Default: testrepo
+    Description: please enter RepositoryName
+  Bucket:
+    Type: String
+    Default: enter-bucket-name
+    Description: please enter RepositoryName
+  Key: 
+    Type: String
+    Default: enter-s3-object
+    Description: please enter S3 bucket object name/ key
+  Name1:
+    Type: String
+    Default: test-resource
+    Description: Name of RDS Instance 1
+  Purpose1:
+    Type: String
+    Default: testPurpose1
+    Description: Purpose of RDS Instance 1
+  EnvironmentType1:
+    Type: String
+    Default: testEnvironmentType
+    Description: Environment Type of RDS Instance 1
+  EnvironmentID1:
+    Type: String
+    Default: TestEnvironmentID
+    Description: EnvironmentID of RDS Instance 1
+  ApplicationOwner1:
+    Type: String
+    Default: Test
+    Description: Application Owner Type of RDS Instance 1
+  Project1:
+    Type: String
+    Default: InfraEOPS
+    Description: Project of RDS Instance 1
+  SID1:
+    Type: String
+    Default: NoSID
+    Description: SID of RDS Instance 1
+  Owner1:
+    Type: String
+    Default: Cadent_EO_Cloud@hcl.com
+    Description: Owner of RDS Instance 1
+  BAUStatus1:
+    Type: String
+    Default: NonLive
+    Description: BAUStatus of RDS Instance 1
+  ApplicationGroup1:
+    Type: String
+    Default: NonSAP
+    Description: ApplicationGroup of RDS Instance 1
+  Application1: 
+    Type: String
+    Default: TestApp
+    Description: Application of RDS Instance 1
+
+Resources:
+  Repository1:
+    Type: AWS::CodeCommit::Repository
+    Properties: 
+      RepositoryDescription: !Ref RepositoryDescription
+      RepositoryName: !Ref RepositoryName
+      Code:
+        BranchName: development
+        S3: 
+          Bucket: !Ref Bucket    #MySourceCodeBucket
+          Key: !Ref Key
+          ObjectVersion: 1
+      Tags: 
+        - Key: Name
+          Value: !Ref Name1
+        - Key: Purpose
+          Value: !Ref Purpose1
+        - Key: EnvironmentType
+          Value: !Ref EnvironmentType1
+        - Key: ApplicationOwner
+          Value: !Ref ApplicationOwner1
+        - Key: Project
+          Value: !Ref Project1
+        - Key: Application
+          Value: !Ref Application1
+        - Key: ApplicationGroup
+          Value: !Ref ApplicationGroup1
+        - Key: BAUStatus
+          Value: !Ref BAUStatus1
+        - Key: EnvironmentID
+          Value: !Ref EnvironmentID1
+        - Key: SID
+          Value: !Ref SID1
+        - Key: Owner
+          Value: !Ref Owner1  
+      #Triggers: 
+      #  - RepositoryTrigger
+
+Outputs:
+  Repository1:
+    Description: InstanceId of the newly created RDS instance
+    Value: !Ref 'Repository1'
