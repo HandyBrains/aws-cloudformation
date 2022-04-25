@@ -200,7 +200,6 @@ Resources:
     Type: AWS::FSx::FileSystem
     Properties:
       FileSystemType: !Ref FileSystemType
-      DeploymentType: !Ref DeploymentType
       KmsKeyId: !Ref KmsKeyId1
       SecurityGroupIds: [!Ref 'SecurityGroupCommon1',!Ref 'SecurityGroupApp1']
       StorageCapacity: !Ref StorageCapacity

@@ -199,8 +199,6 @@ Resources:
     Type: AWS::FSx::FileSystem
     Properties:
       FileSystemType: !Ref FileSystemType
-      #DeploymentType: !Ref DeploymentType
-      DeploymentType: 'MULTI_AZ_1'
       KmsKeyId: !Ref KmsKeyId1
       SecurityGroupIds: [!Ref 'SecurityGroupCommon1',!Ref 'SecurityGroupApp1']
       StorageCapacity: !Ref StorageCapacity
@@ -214,7 +212,8 @@ Resources:
         DailyAutomaticBackupStartTime: !Ref DailyAutomaticBackupStartTime
         AutomaticBackupRetentionDays: !Ref AutomaticBackupRetentionDays
         CopyTagsToBackups: !Ref CopyTagsToBackups
-        DeploymentType: !Ref DeploymentType
+        #DeploymentType: !Ref DeploymentType
+        DeploymentType: 'MULTI_AZ_1'
         PreferredSubnetId: !Ref PreferredSubnet
         SelfManagedActiveDirectoryConfiguration:
           DnsIps: [!Ref DnsIpsPrimary,!Ref DnsIpsSecondary]
