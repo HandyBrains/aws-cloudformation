@@ -1,0 +1,256 @@
+#**************************************************************************************
+# Author: RK (Radhakrishnan.Madhan)
+# Team: Cloud Environment Management
+# Creation Date:      05-Apr-2022
+# Modification Date:  12-Apr-2022
+# Version: v1
+# Version-Update: 
+# Usable : No 
+# ********************Instructions****************************************
+# Not-completed - Work in Progress 
+#
+#
+#
+#*************************************************************************
+
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS CloudFormation Sample Template creates an ec2 instance 
+              with additional 100gb ebs volume
+              Latest Amazon public AMI pulled from SSM parameter'
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: =====FSx 1 CONFIGURATION =============================
+      Parameters:
+         - FileSystemType
+        # - DeploymentType
+         - StorageCapacity
+         - ThroughputCapacity
+         - KmsKeyId1
+         - WeeklyMaintenanceStartTime
+         - DailyAutomaticBackupStartTime
+         - AutomaticBackupRetentionDays
+         - CopyTagsToBackups
+         - SecurityGroupCommon1
+         - SecurityGroupApp1
+         - PreferredSubnet
+         #- StandbySubnet
+    - Label:
+        default: =====FSx 1 self managed Active Directory CONFIGURATION =============================
+      Parameters:
+         - DomainName
+         - Aliases
+         - DnsIpsPrimary
+         - DnsIpsSecondary
+         - FileSystemAdministratorsGroup
+         - OrganizationalUnitDistinguishedName
+         - UserName
+         - Password
+    - Label:
+        default: =====AWS TAGS for resources created========================
+      Parameters:
+        - Name1
+        - Application1
+        - ApplicationGroup1
+        - Project1
+        - BAUStatus1
+        - EnvironmentType1
+        - Purpose1
+        - EnvironmentID1
+        - Owner1
+        - ApplicationOwner1
+        - SID1     
+  
+
+Parameters:
+  #DeploymentType:
+    #Type: String
+    #Default: 'SINGLE_AZ_2'
+    #AllowedValues: ['MULTI_AZ_1', 'SINGLE_AZ_1', 'SINGLE_AZ_2']
+    #Description: MULTI_AZ_1 or SINGLE_AZ_1 or SINGLE_AZ_2
+  FileSystemType:
+    Type: String
+    Default: WINDOWS
+    AllowedValues: [LUSTRE, WINDOWS, ONTAP, OPENZFS]
+    Description: The type of Amazon FSx file system, which can be LUSTRE, WINDOWS, ONTAP, or OPENZFS
+  StorageCapacity:
+    Type: String
+    Default: 32
+    Description: StorageCapacity of the Fsx minimum size(in GiB) is 32 
+  
+  ThroughputCapacity: 
+    Type: String
+    Default: 32
+    Description: enter the Throughput Capacity- mb/s
+  KmsKeyId1:
+    Type: String
+    Default: enter kms key id
+    ConstraintDescription: must be the name of an already created encrption key id
+  SecurityGroupCommon1:
+    Type: 'AWS::EC2::SecurityGroup::Id'
+    Description: Proj specific Wintel securitygroup.
+    ConstraintDescription: must be the name of an already created SG.
+  SecurityGroupApp1:
+    Type: 'AWS::EC2::SecurityGroup::Id'
+    Description: App specific securitygroup.
+    ConstraintDescription: must be the name of an already created App specific SG.
+  PreferredSubnet:
+    Type: 'AWS::EC2::Subnet::Id'
+    Description: Subnet
+    ConstraintDescription: must be the name of an existing SubnetId.
+  #StandbySubnet:
+   # Type: 'AWS::EC2::Subnet::Id'
+   # Description: Subnet
+   # ConstraintDescription: must be the name of an existing SubnetId.
+  WeeklyMaintenanceStartTime: 
+    Type: String
+    Default: "4:16:30"
+    Description: weekly maintenance start time
+  DailyAutomaticBackupStartTime: 
+    Type: String
+    Default: '01:00'
+    Description: For example, 05:00 specifies 5 AM daily
+  AutomaticBackupRetentionDays: 
+    Type: String
+    Default: 7
+    Description: 0 to 90 days, The default is 0
+  CopyTagsToBackups: 
+    Type: String
+    Description: true or false
+    Default: true
+    AllowedValues: [true,false]
+  
+  DomainName:
+    Type: String
+    Description: example corp.example.com
+  Aliases:   
+    Type: String
+    Description:  for example, accounting.example.com 
+  DnsIpsPrimary:
+    Type: String
+    Description: enter the primary DNS Ip
+  DnsIpsSecondary:
+    Type: String
+    Description: enter the secondary DNS Ip
+  FileSystemAdministratorsGroup:
+    Type: String
+    Default: Role-G-HCL-ElasticOps-Support
+    Description: The name of the domain group whose members are granted administrative privileges for the file system
+  OrganizationalUnitDistinguishedName:
+    Type: String
+    Description: An example is OU=FSx,DC=yourdomain,DC=corp,DC=com
+  UserName:
+    Type: String
+    Description: The user name for the service account on your self-managed AD domain
+  Password:
+    #Type: String
+    Type: AWS::SSM::Parameter::Value<String>
+    Description: The password for the service account on your self-managed AD domain
+
+  Name1:
+    Type: String
+    Default: test-resource
+    Description: Name of Fsx 1
+  Purpose1:
+    Type: String
+    Default: testPurpose1
+    Description: Purpose of Fsx 1
+  EnvironmentType1:
+    Type: String
+    Default: testEnvironmentType
+    Description: Environment Type of Fsx 1
+  EnvironmentID1:
+    Type: String
+    Default: TestEnvironmentID
+    Description: EnvironmentID of Fsx 1
+  ApplicationOwner1:
+    Type: String
+    Default: Test
+    Description: Application Owner Type of Fsx 1
+  Project1:
+    Type: String
+    Default: InfraEOPS
+    Description: Project of Fsx 1
+  SID1:
+    Type: String
+    Default: NoSID
+    Description: SID of Fsx 1
+  Owner1:
+    Type: String
+    Default: Cadent_EO_Cloud@hcl.com
+    Description: Owner of Fsx 1
+  BAUStatus1:
+    Type: String
+    Default: NonLive
+    Description: BAUStatus of Fsx 1
+  ApplicationGroup1:
+    Type: String
+    Default: NonSAP
+    Description: ApplicationGroup of Fsx 1
+  Application1: 
+    Type: String
+    Default: TestApp
+    Description: Application of Fsx 1
+
+
+  
+Resources:
+  FSx1:
+    Type: AWS::FSx::FileSystem
+    Properties:
+      FileSystemType: !Ref FileSystemType
+      DeploymentType: !Ref DeploymentType
+      KmsKeyId: !Ref KmsKeyId1
+      SecurityGroupIds: [!Ref 'SecurityGroupCommon1',!Ref 'SecurityGroupApp1']
+      StorageCapacity: !Ref StorageCapacity
+      StorageType: SSD 
+      SubnetIds: [!Ref 'PreferredSubnet'] #,!Ref 'StandbySubnet']
+        
+      WindowsConfiguration:
+        ThroughputCapacity: !Ref ThroughputCapacity
+        Aliases: [!Ref Aliases ]      
+        WeeklyMaintenanceStartTime: !Ref WeeklyMaintenanceStartTime
+        DailyAutomaticBackupStartTime: !Ref DailyAutomaticBackupStartTime
+        AutomaticBackupRetentionDays: !Ref AutomaticBackupRetentionDays
+        CopyTagsToBackups: !Ref CopyTagsToBackups
+        #DeploymentType: !Ref DeploymentType
+        DeploymentType: SINGLE_AZ_2 #or SINGLE_AZ_1
+        PreferredSubnetId: !Ref PreferredSubnet
+        SelfManagedActiveDirectoryConfiguration:
+          DnsIps: [!Ref DnsIpsPrimary,!Ref DnsIpsSecondary]
+          DomainName: [!Ref DomainName]
+          FileSystemAdministratorsGroup: !Ref FileSystemAdministratorsGroup
+          OrganizationalUnitDistinguishedName: !Ref OrganizationalUnitDistinguishedName
+          UserName: !Ref UserName
+          Password: !Ref Password
+        
+      Tags:
+        - Key: Name
+          Value: !Ref Name1
+        - Key: Purpose
+          Value: !Ref Purpose1
+        - Key: EnvironmentType
+          Value: !Ref EnvironmentType1
+        - Key: ApplicationOwner
+          Value: !Ref ApplicationOwner1
+        - Key: Project
+          Value: !Ref Project1
+        - Key: Application
+          Value: !Ref Application1
+        - Key: ApplicationGroup
+          Value: !Ref ApplicationGroup1
+        - Key: BAUStatus
+          Value: !Ref BAUStatus1
+        - Key: EnvironmentID
+          Value: !Ref EnvironmentID1
+        - Key: SID
+          Value: !Ref SID1
+        - Key: Owner
+          Value: !Ref Owner1
+  
+Outputs:
+  FileSystemId:
+    Description: FSx Id of the newly created FSx
+    Value: !Ref 'FSx1'
+ 
