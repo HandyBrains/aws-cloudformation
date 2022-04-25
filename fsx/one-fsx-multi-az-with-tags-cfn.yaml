@@ -71,8 +71,8 @@ Parameters:
   FileSystemType:
     Type: String
     Default: WINDOWS
-    AllowedValues: [LUSTRE, WINDOWS, ONTAP, OPENZFS]
-    Description: The type of Amazon FSx file system, which can be LUSTRE, WINDOWS, ONTAP, or OPENZFS
+    #AllowedValues: [LUSTRE, WINDOWS, ONTAP, OPENZFS]
+    Description: The type of Amazon FSx file system, which can be WINDOWS
   StorageCapacity:
     Type: String
     Default: 32
