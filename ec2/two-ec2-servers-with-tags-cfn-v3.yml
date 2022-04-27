@@ -169,7 +169,7 @@ Parameters:
     Description: OS Type of instance 1
   CostCenter1:
     Type: String
-    Description: Service Type of instance 1
+    Description: CostCenter of instance 1
   EnvironmentType1:
     Type: String
     Description: Environment Type of instance 1
@@ -305,7 +305,7 @@ Parameters:
     Description: OS Type of instance 2
   CostCenter2:
     Type: String
-    Description: Service Type of instance 2
+    Description: CostCenter of instance 2
   EnvironmentType2:
     Type: String
     Description: Environment Type of instance 2
@@ -399,7 +399,7 @@ Resources:
           Value: !Ref Hostname1
         - Key: Project
           Value: !Ref Project1
-        - Key: Service-Type
+        - Key: CostCenter
           Value: !Ref CostCenter1
         - Key: Application
           Value: !Ref Application1
@@ -497,7 +497,7 @@ Resources:
           Value: !Ref Hostname2
         - Key: Project
           Value: !Ref Project2
-        - Key: Service-Type
+        - Key: CostCenter
           Value: !Ref CostCenter2
         - Key: Application
           Value: !Ref Application2
