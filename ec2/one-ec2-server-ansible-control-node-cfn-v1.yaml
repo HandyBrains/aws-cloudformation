@@ -3,10 +3,10 @@
 # Team: Cloud Environment Management
 # Creation Date:      05-Apr-2022
 # Modification Date:  12-Apr-2022
-# Version: v2
+# Version: v1
 # Version-Update: Added the Root/Add ebs volume as parameter,to select the ebs size
 # Usable : Yes - Can be used by all
-# Title : one-ec2-server-with-tags-cfn-v2.yaml
+# Title : one-ec2-server-ansible-control-node-cfn-v1.yaml
 # 
 #
 #
@@ -21,7 +21,7 @@
 #****************************************************************************************
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'AWS CloudFormation Template creates one ec2 instances 
-              with 100GB Root volume and 100 GB additional ebs volume
+              with 100GB Root volume and 30 GBadditional ebs volume
               Latest AMI Id that you mention '
 Metadata:
   AWS::CloudFormation::Interface:
