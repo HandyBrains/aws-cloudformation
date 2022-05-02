@@ -20,7 +20,7 @@
 #
 #****************************************************************************************
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'AWS CloudFormation Template creates tonewo  ec2 instances 
+Description: 'AWS CloudFormation Template creates one ec2 instances 
               with 100GB Root volume and 100 GB additional ebs volume
               Latest AMI Id that you mention '
 Metadata:
@@ -191,7 +191,7 @@ Parameters:
     Description: Application of instance 1
   
 Resources:
-  ansible-control:
+  ansiblecontrol:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref 'InstanceType1'
@@ -263,7 +263,7 @@ Resources:
   AttachEBSVolume1:
     Type: "AWS::EC2::VolumeAttachment"
     Properties:
-      InstanceId: !Ref ansible-control
+      InstanceId: !Ref ansiblecontrol
       VolumeId: !Ref AdditionalEBSVolume1
       Device: /dev/sdb
   AdditionalEBSVolume1:
@@ -273,7 +273,7 @@ Resources:
       VolumeType: gp3
       KmsKeyId: !Ref EBSEncryptionKmsKeyId1
       Encrypted: !Ref EBSEncryption1
-      AvailabilityZone: !GetAtt ansible-control.AvailabilityZone
+      AvailabilityZone: !GetAtt ansiblecontrol.AvailabilityZone
       Tags:
         - Key: Name
           Value: !Ref Name1
@@ -291,9 +291,9 @@ Resources:
           Value: !Ref ApplicationGroup1
   
 Outputs:
-  ansible-control:
+  ansiblecontrol:
     Description: InstanceId of the newly created EC2 instance
-    Value: !Ref 'ansible-control'
+    Value: !Ref 'ansiblecontrol'
   InstanceType1:
     Description: InstanceType of the newly created EC2 instance
     Value: !Ref 'InstanceType1'
